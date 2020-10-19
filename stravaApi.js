@@ -89,7 +89,7 @@ function getActivities(res) {
                     .attr('x', -135)
                     .attr('y', 50)
                     .attr("font-size", "12px")
-                    .text('Pace (Mins/Mile)')
+                    .text('Pace (mins/mile)')
                     .attr("class", "axis-label");
             canvas.append("text")
                     .attr('x', w-horizontalPad - 20)
@@ -97,6 +97,11 @@ function getActivities(res) {
                     .attr("font-size", "12px")
                     .text('Date')
                     .attr("class", "axis-label");
+            canvas.append("text")
+                    .attr('x', 225) 
+                    .attr('y', 20)
+                    .attr("class", "graph-title")
+                    .text("Pace on Each Run")
             canvas.selectAll("circle")
                     .data(paceArr)
                     .enter()
@@ -218,7 +223,13 @@ function getClub(res){
                         .on("mouseout", function(d){
                             tooltip.style("display", "none")
                         })
-
+                
+                        .text("Avg. Pace Per Run")
+                canvas.append("text")
+                        .attr('x', 200) 
+                        .attr('y', 20)
+                        .attr("class", "graph-title")
+                        .text("Total Distance Per Runner")
                 canvas.append("text")
                         .attr('x', w-horizontalPad - 250)
                         .attr('y', verticalPad + 50)
@@ -275,7 +286,16 @@ function getClub(res){
                     .attr("transform", "translate(" + horizontalPad2 + ", 0)")
                     .attr("class", "axis")
                     .call(yAxis2)
-
+                canvas2.append("text")
+                    .attr('x', w-horizontalPad - 150)
+                    .attr('y', verticalPad + 50)
+                    .attr("class", "cumulative-label")
+                    .text(`Pace: (mins/mile)`)
+                canvas2.append("text")
+                    .attr('x', 225) 
+                    .attr('y', 20)
+                    .attr("class", "graph-title")
+                    .text("Avg. Pace of Runners")
                 canvas2.selectAll("rect")
                     .data(memberRunTimes)
                     .enter()
