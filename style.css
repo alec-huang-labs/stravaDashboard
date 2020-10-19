@@ -67,4 +67,14 @@ circle, .rectangles{
     margin: 5px 5px 5px 5px;
 }
 
-
+.toolTip {
+    position: absolute;
+    display: none;
+    min-width: 80px;
+    padding: 3px;
+    height: auto;
+    background: #C4C4C4;
+    font-family: "Open Sans";
+    font-size: 12px;
+    color: #444444;
+}

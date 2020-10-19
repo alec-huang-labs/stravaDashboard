@@ -4,6 +4,17 @@ function paceConverter(m, s){
     return (s / 60) / (m * 0.000621371192);
 }
 
+function shortDate(obj){
+    let month = obj.getMonth() + 1;
+    return (
+      month +
+      "-" +
+      obj.getDate() +
+      "-" +
+      obj.getFullYear()
+    )
+  }
+
 function getActivities(res) {
     const activities_link = `https://www.strava.com/api/v3/athlete/activities?access_token=${res.access_token}&per_page=200`;
     fetch(activities_link)
@@ -38,6 +49,8 @@ function getActivities(res) {
                     }
                 ).addTo(map)
             }
+            console.log(paceArr);
+            var tooltip = d3.select("body").append("div").attr("class", "toolTip");
             //dimensions of svg canvas
             const horizontalPad = 30;
             const verticalPad = 30;
@@ -61,7 +74,7 @@ function getActivities(res) {
             const xAxis = d3.axisBottom(xScale)
                             .ticks(5)
             const yAxis = d3.axisLeft(yScale)  
-                            .tickFormat(d3.timeFormat("%I"))           
+                            //.tickFormat(d3.timeFormat("%I"))           
             //appending x & y axis
             canvas.append("g")
                     .attr("transform", "translate(0," + (h - horizontalPad) + ")")
@@ -92,6 +105,16 @@ function getActivities(res) {
                     .attr("cy", (d) => yScale(d[1]))
                     .attr("r", (d) => 3)
                     .attr("fill", "red")
+                    .on("mousemove", function(d) {
+                        tooltip
+                            .style("left", d3.event.pageX - 25 + "px")
+                            .style("top", d3.event.pageY - 35 + "px")
+                            .style("display", "inline-block")
+                            .html( shortDate(d[0]) + "<br>" + Math.floor(d[1]) + ' Mins ' + Math.floor((d[1]%1) * 60) + ' Seconds ');
+                    })
+                    .on("mouseout", function(d){
+                        tooltip.style("display", "none")
+                    })
             });       
 }
 
@@ -138,8 +161,8 @@ function getClub(res){
                 console.log(memberDistArr.map(x => x[0]))
 
                 //make bar graph of all Member distances
-                const horizontalPad = 30;
-                const verticalPad = 30;
+                const horizontalPad = 35;
+                const verticalPad = 35;
                 const w = memberDistArr.length * 60 - horizontalPad;
                 const h = 675;
                 //d3.scaleOrdinal([[domain, ]range])
@@ -147,12 +170,14 @@ function getClub(res){
                 for (let i = 0; i<memberDistArr.length; i++){
                     tickDist.push(i*55 + horizontalPad)
                 }
+                var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
                 const xScale = d3.scaleOrdinal()
                                 .domain(memberDistArr.map(x => x[0]))
                                 //.range(["#C4C4C4"])
                                 .range([...tickDist])
                 const yScale = d3.scaleLinear()
-                                .domain([150,0])
+                                .domain([Math.ceil(memberDistArr[0][1]),Math.floor(memberDistArr[memberDistArr.length-1][1])])
                                 //map memberDistArr then use max and min
                                 .range([verticalPad, h-verticalPad]);
                 //create svg canvas for vertical bar graph
@@ -183,11 +208,30 @@ function getClub(res){
                         .attr("height", (d,i) => h - verticalPad -  yScale(d[1]))
                         .attr("fill", "red")
                         .attr("opacity", 0.50)
+                        .on("mousemove", function(d) {
+                            tooltip
+                                .style("left", d3.event.pageX - 25 + "px")
+                                .style("top", d3.event.pageY - 35 + "px")
+                                .style("display", "inline-block")
+                                .html(Math.floor(d[1]) + " Miles")
+                        })
+                        .on("mouseout", function(d){
+                            tooltip.style("display", "none")
+                        })
+
                 canvas.append("text")
                         .attr('x', w-horizontalPad - 250)
                         .attr('y', verticalPad + 50)
                         .attr("class", "cumulative-label")
                         .text(`Cumulative Club Miles: ${Math.floor(distances.reduce((accum, current) => accum + current))} miles`)
+                canvas.append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr('x', -100)
+                        .attr('y', 60)
+                        .attr("font-size", "12px")
+                        .text('Miles')
+                        .attr("class", "axis-label");
+                
                 const memberRunTimes = [];
                 for(let i = 0; i < membersArr.length; i++){
                     memberRunTimes.push([membersArr[i].firstname+" "+membersArr[i].lastname, paceConverter(membersArr[i].meters, membersArr[i].time)])
@@ -221,6 +265,8 @@ function getClub(res){
                 
                 //console.log(Math.ceil(memberRunTimes[memberRunTimes.length-1][1]) - Math.floor(memberRunTimes[0][1]))
 
+                
+
                 canvas2.append("g")
                     .attr("transform", "translate(0," + horizontalPad2 + ")")
                     .attr("class", "axis")
@@ -240,17 +286,19 @@ function getClub(res){
                     .attr("width", (d,i) => xScale2(d[1]) - horizontalPad2) //fix!
                     .attr("fill", "red")
                     .attr("opacity", 0.50)
+                    .on("mousemove", function(d) {
+                        tooltip
+                            .style("left", d3.event.pageX - 25 + "px")
+                            .style("top", d3.event.pageY - 35 + "px")
+                            .style("display", "inline-block")
+                            .html(Math.floor(d[1]) + ' Mins ' + Math.floor((d[1]%1) * 60) + ' Seconds ');
+                    })
+                    .on("mouseout", function(d){
+                        tooltip.style("display", "none")
+                    })
             })
     })
 }
-
-
-
-
-
-
-
-
 
 
 
