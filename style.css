@@ -1,0 +1,70 @@
+html, body {
+    height: 100%;
+    background-color:#191A1A;
+    font-family: 'Open Sans', sans-serif;
+    color: #919191;
+}
+/*strava hex: #e34900*/
+/*mapbox light grey hex: #919191*/
+/*
+Mapbox dark map color scheme (light -> dark):
+#C4C4C4
+#919191
+#444444
+#2C2C2B
+#191A1A
+*/
+#top-container, #bottom-container{
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    justify-content: center;
+}
+#map { 
+    height: 675px;
+    width: 60vw;
+    border: 2px solid #2C2C2B;
+    border-radius: 2px;
+    margin: 5px 5px 5px 5px;
+}
+.scatter-bg, .vert-bar-bg, .hor-bar-bg{
+    height: 675px;
+    width: 600px;
+    background-color: #444444;
+    border: 2px solid #2C2C2B;
+    border-radius: 2px;
+    margin: 5px 5px 5px 5px;
+}
+#right-container{
+    display: flex;
+    flex-direction: column;
+}
+.axis line, .axis path, .axis text   {
+    stroke: #C4C4C4;
+    font-family: "Open Sans";
+    font-weight: lighter;
+}
+.axis-label, .cumulative-label {
+    font-size: 14px;
+    fill: #C4C4C4;
+    font-family: "Open Sans";
+}
+circle, .rectangles{
+    fill: red;
+    opacity: 0.75;
+}
+#wac {
+    text-align: left;
+    font-size: 24px;
+    font-weight: bolder;
+}
+#club_stats{ 
+    height: 675px;
+    width: 50%;
+    display:inline-block;
+    border: 2px solid #2C2C2B;
+    border-radius: 2px;
+    margin: 5px 5px 5px 5px;
+}
+
+
