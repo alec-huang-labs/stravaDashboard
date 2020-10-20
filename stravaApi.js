@@ -1,9 +1,11 @@
 const authLink = "https://www.strava.com/oauth/token"
 
+//convert meters & sec -> miles/min
 function paceConverter(m, s){
     return (s / 60) / (m * 0.000621371192);
 }
 
+//convert date object to shorter string. Ex. 07-11-2020
 function shortDate(obj){
     let month = obj.getMonth() + 1;
     return (
@@ -17,45 +19,51 @@ function shortDate(obj){
 
 function getActivities(res) {
     const activities_link = `https://www.strava.com/api/v3/athlete/activities?access_token=${res.access_token}&per_page=200`;
+    //provide fetch() with the path to the resource you want to fetch
     fetch(activities_link)
-        .then((res) => res.json())
-        .then(function (activityData){
+        //if the fetch is successful, a promise obj is returned and we read & parse the data using json()
+        .then(res => res.json())
+        //if the data is successfully read & parsed through using json(), the data in json is passed into activityData which executes the following function 
+        .then(activityData => {
+            //work with the MapBox Api to pull a map from their database 
             const mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
             '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
             'Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>',
             mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWxlYy1odWFuZy1sYWJzIiwiYSI6ImNrZzgzNnR0bjBkOWUycHBtYWVrOWRwa24ifQ.XF-6fJrDm7L_LLQcnE-VOw';
             var grayscale   = L.tileLayer(mbUrl, {id: 'mapbox/dark-v10', tileSize: 512, zoomOffset: -1,detectRetina: true, attribution: mbAttr})
+            //using the Leaflet.js library, create a map obj
             var map = L.map('map', {
                 center: [40.77508184, -73.9525795],
                 zoom: 13,
                 layers: [grayscale]
             });
+            console.log(activityData.length)
             console.log(activityData)
             let numRuns = activityData.length;
             let paceArr = []
-            for(let i=0; i<activityData.length; i++){
-                //console.log(activityData[x].map.summary_polyline)
+            for(let i = 0; i < activityData.length; i ++){
+                //summary_polyline is a series of encoded lat & lng coordinates that represents your running path
+                //we're going to decode it into an array of coordinate objs 
                 let coordinates = L.Polyline.fromEncoded(activityData[i].map.summary_polyline).getLatLngs();
-                let distance = activityData[i].distance;
-                let time = activityData[i].moving_time;
-                paceArr.push([new Date(activityData[i].start_date), paceConverter(distance, time)])
-                //console.log(paceArr)
+                //string the coordinates together to form a polyline when strung together. then add it to our map
                 L.polyline(
                     coordinates,{
                         color:"red",
                         weight: 3,
-                        opacity: 0.25,
-                        linkeJoin: "round"
+                        opacity: 0.25
                     }
                 ).addTo(map)
+                let distance = activityData[i].distance;
+                let time = activityData[i].moving_time;
+                paceArr.push([new Date(activityData[i].start_date), paceConverter(distance, time)])
             }
-            console.log(paceArr);
             var tooltip = d3.select("body").append("div").attr("class", "toolTip");
             //dimensions of svg canvas
             const horizontalPad = 30;
             const verticalPad = 30;
-            const w = numRuns * 7- horizontalPad;
+            const w = 600 - horizontalPad;
             const h = 675;
+            console.log(w);
             //x & y scale
             const xScale = d3.scaleTime()
                                 .domain([new Date(activityData[0].start_date), new Date(activityData[activityData.length - 1].start_date)])
@@ -127,7 +135,7 @@ function getClub(res){
     const clubMemberLink = `https://www.strava.com/api/v3/clubs/746943/members?access_token=${res.access_token}`
     fetch(clubMemberLink)
         .then((res) => res.json())
-        .then(function (memberData){
+        .then(memberData => {
             //console.log(memeberData)
             let membersArr = [...memberData];
             for(let i = 0; i < membersArr.length; i++){
@@ -169,6 +177,7 @@ function getClub(res){
                 const verticalPad = 35;
                 const w = memberDistArr.length * 60 - horizontalPad;
                 const h = 675;
+                console.log(w)
                 //d3.scaleOrdinal([[domain, ]range])
                 let tickDist = [];
                 for (let i = 0; i<memberDistArr.length; i++){

@@ -13,16 +13,29 @@ Mapbox dark map color scheme (light -> dark):
 #444444
 #2C2C2B
 #191A1A
+
+media query below is faulty
 */
+
+@media only screen and (max-width: 1000px){
+    #top-container, #bottom-container{
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        background-color: white;
+    }
+}
+
 #top-container, #bottom-container{
     display: flex;
     flex-direction: row;
     width: 100vw;
-    justify-content: center;
+    /*justify-content: center;*/
+    padding: 10px;
 }
 #map { 
     height: 675px;
-    width: 60vw;
+    width: 600px;
     border: 2px solid #2C2C2B;
     border-radius: 2px;
     margin: 5px 5px 5px 5px;
@@ -35,11 +48,7 @@ Mapbox dark map color scheme (light -> dark):
     border-radius: 2px;
     margin: 5px 5px 5px 5px;
 }
-#right-container{
-    display: flex;
-    flex-direction: column;
-}
-.axis line, .axis path, .axis text   {
+.axis line, .axis path, .axis text {
     stroke: #C4C4C4;
     font-family: "Open Sans";
     font-weight: lighter;
@@ -76,7 +85,6 @@ circle:hover{
     border-radius: 2px;
     margin: 5px 5px 5px 5px;
 }
-
 .toolTip {
     position: absolute;
     display: none;
