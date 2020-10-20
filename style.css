@@ -51,7 +51,17 @@ Mapbox dark map color scheme (light -> dark):
 }
 circle, .rectangles{
     fill: red;
-    opacity: 0.75;
+    opacity: 0.5;
+}
+circle:hover{
+    fill: red;
+    opacity: 1;
+
+}
+.rectangles:hover{
+    fill: red;
+    opacity: 1;
+
 }
 #wac {
     text-align: left;

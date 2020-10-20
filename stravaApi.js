@@ -109,11 +109,10 @@ function getActivities(res) {
                     .attr("cx", (d) => xScale(d[0]))
                     .attr("cy", (d) => yScale(d[1]))
                     .attr("r", (d) => 3)
-                    .attr("fill", "red")
                     .on("mousemove", function(d) {
                         tooltip
-                            .style("left", d3.event.pageX - 25 + "px")
-                            .style("top", d3.event.pageY - 35 + "px")
+                            .style("left", d3.event.pageX + "px")
+                            .style("top", d3.event.pageY + 20 + "px")
                             .style("display", "inline-block")
                             .html( shortDate(d[0]) + "<br>" + Math.floor(d[1]) + ' Mins ' + Math.floor((d[1]%1) * 60) + ' Seconds ');
                     })
@@ -211,8 +210,7 @@ function getClub(res){
                         .attr("y", (d,i) => yScale(d[1]))
                         .attr("width", 10)
                         .attr("height", (d,i) => h - verticalPad -  yScale(d[1]))
-                        .attr("fill", "red")
-                        .attr("opacity", 0.50)
+                        .attr("class", "rectangles")
                         .on("mousemove", function(d) {
                             tooltip
                                 .style("left", d3.event.pageX - 25 + "px")
@@ -304,8 +302,7 @@ function getClub(res){
                     .attr("y", (d,i) => yScale2(d[0]))
                     .attr("height", 10)
                     .attr("width", (d,i) => xScale2(d[1]) - horizontalPad2) //fix!
-                    .attr("fill", "red")
-                    .attr("opacity", 0.50)
+                    .attr("class", "rectangles")
                     .on("mousemove", function(d) {
                         tooltip
                             .style("left", d3.event.pageX - 25 + "px")
